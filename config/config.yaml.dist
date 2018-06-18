@@ -1,0 +1,8 @@
+project_code: sceptre-zip-code-s3
+region: eu-central-1
+
+# S3 bucket name to deploy lambda artifacts
+artifacts_bucket: deploy-my-artifacts
+
+# Prefix for IAM and Lambda resources
+resource_prefix: demo-s3-sceptre-deploy

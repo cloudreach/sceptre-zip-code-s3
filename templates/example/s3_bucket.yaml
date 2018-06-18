@@ -1,0 +1,17 @@
+# Example template to create S3 bucket with versioning
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  BucketName:
+    Type: String
+Resources:
+  Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Ref BucketName
+      VersioningConfiguration:
+        Status: Enabled
+Outputs:
+  Name:
+    Value: !Ref BucketName
+  Arn:
+    Value: !GetAtt Bucket.Arn

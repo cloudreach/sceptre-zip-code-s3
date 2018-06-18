@@ -1,0 +1,15 @@
+template_path: templates/example/lambda_function_custom.py
+hooks:
+  before_create:
+    - !s3_package src/example/lambda-py3-deps^^{{ environment_config.artifacts_bucket }}/lambda/example-py3-deps.zip
+  before_update:
+    - !s3_package src/example/lambda-py3-deps^^{{ environment_config.artifacts_bucket }}/lambda/example-py3-deps.zip
+parameters:
+  Name: {{ environment_config.resource_prefix }}-py3-deps
+  Role: !stack_output lambda-role::Arn
+sceptre_user_data:
+  Runtime: python3.6
+  Handler: index.handler
+  S3_Bucket: {{ environment_config.artifacts_bucket }}
+  S3_Key: lambda/example-py3-deps.zip
+  S3_Version: !s3_version {{ environment_config.artifacts_bucket }}/lambda/example-py3-deps.zip

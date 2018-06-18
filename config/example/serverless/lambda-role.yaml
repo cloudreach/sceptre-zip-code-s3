@@ -1,0 +1,13 @@
+template_path: templates/example/iam_role.py
+parameters:
+  Name: {{ environment_config.resource_prefix }}-lambda-role
+sceptre_user_data:
+  AssumeRolePolicyDocument:
+    Version: "2012-10-17"
+    Statement:
+      - Effect: "Allow"
+        Principal:
+          Service:
+            - "lambda.amazonaws.com"
+        Action:
+          - "sts:AssumeRole"
