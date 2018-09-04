@@ -199,6 +199,16 @@ As hook definition, resolver also has **auto-discovery** and **direct** modes.
         ObjectVersion: !s3_version <s3_bucket>/<s3_key>
     ```
 
+* S3 bucket/key names come from another stack:
+
+    ```yaml
+    sceptre_user_data:
+        Code:
+            S3Bucket: !stack_output my-other-stack::BucketName
+            S3Key: !stack_output my-other-stack::KeyName
+            S3ObjectVersion: !s3_version
+    ```
+
 ### Function Makefile
 
 Each function has own `Makefile` file inside it's root.

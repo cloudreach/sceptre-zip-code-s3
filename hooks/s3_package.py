@@ -1,6 +1,7 @@
 import hashlib, os, subprocess, zipfile
 from base64 import b64encode
 from sceptre.hooks import Hook
+from sceptre.resolvers import Resolver
 from botocore.exceptions import ClientError
 from datetime import datetime
 from shutil import rmtree
@@ -49,6 +50,14 @@ class S3Package(Hook):
             raise Exception(
                 "S3 bucket/key could not be parsed nor from the argument, neither from sceptre_user_data['Code']"
             )
+
+        if isinstance(s3_bucket, Resolver):
+            s3_bucket = s3_bucket.resolve()
+            self.logger.debug("[{}] resolved S3 bucket value to {}".format(self.NAME, s3_bucket))
+
+        if isinstance(s3_key, Resolver):
+            s3_key = s3_key.resolve()
+            self.logger.debug("[{}] resolved S3 key value to {}".format(self.NAME, s3_key))
 
         fn_dist_dir = os.path.join(fn_root_dir, self.TARGET)
 
