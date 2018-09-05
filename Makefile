@@ -38,6 +38,8 @@ plugins:
 ifeq (, $(TARGET))
 	$(error Please specity TARGET= value)
 endif
+	/bin/test -d "$(TARGET)/hooks" || mkdir -p "$(TARGET)/hooks"
+	/bin/test -d "$(TARGET)/resolvers" || mkdir -p "$(TARGET)/resolvers"
 	/bin/cp -f hooks/s3_package.py "$(TARGET)/hooks/"
 	/bin/cp -f resolvers/s3_version.py "$(TARGET)/resolvers/"
 
