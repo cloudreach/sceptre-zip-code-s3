@@ -63,7 +63,7 @@ To display available commands, run `make` or `make help` command.
 
     `NB!` _It's possible to refer existing bucket, with enabled **Versioning** support._
 
-### Deploy Lambdas:
+### Deploy Lambdas
 
 * Deploy whole environment at once:
 
@@ -260,10 +260,30 @@ Explanation:
 
 Feel free to adjust `Makefile` as you like, e.g., use `Docker` to build, just pay attention to `/dist/` directory.
 
+### S3 encryption
+
+There is a trick if you are using **encryption** on S3.
+
+According to https://docs.aws.amazon.com/AmazonS3/latest/API/RESTCommonResponseHeaders.html documentation,
+ETag `may` or `may not` be an **MD5 digest** of the object data.
+
+1. Objects encrypted by SSE-S3 or plaintext, have ETags that `are` an MD5 digest of their object data.
+2. Objects encrypted by SSE-C or SSE-KMS, have ETags that `are not` an MD5 digest of their object data.
+3. Object is created by either the Multipart Upload or Part Copy operation, the ETag `is not` an MD5 digest, regardless of the encryption method.
+
+In use-case `1` hook won't upload archive twice, as content MD5 and ETag do match.
+
+> using `SSEAlgorithm: AES256` on S3 bucket will enable default encryption
+
+In other use-cases hook will upload archive every time it's called, as content MD5 and ETag do not match.
+
+> it might be required to build custom MD5/ETag lookup solution and adjust hook.
+
 #### Caveats
 
 - note that Sceptre `v1.3.4` was tested only and it may misbehave on previous versions.
 - when running `Sceptre` from OSX, some packages may contain binary inside, so be sure to upload the proper one.
+- custom encryption might require custom MD5/ETag lookup solution, see [S3 encryption](#s3-encryption)
 
 ## How to Contribute
 
