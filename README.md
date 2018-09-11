@@ -76,7 +76,7 @@ To display available commands, run `make` or `make help` command.
     ```bash
     $ sceptre launch-stack example/serverless lambda-role
     $ sceptre launch-stack example/serverless lambda-py2-deps
-    $ sceptre launch-stack example/serverless lambda-py3-deps
+    $ sceptre launch-stack example/serverless lambda-py3-deps-custom
     ```
 
 This is what have been done (per function):
