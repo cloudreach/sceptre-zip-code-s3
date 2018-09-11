@@ -5,6 +5,7 @@ from sceptre.resolvers import Resolver
 from botocore.exceptions import ClientError
 from datetime import datetime
 from shutil import rmtree
+import subprocess
 
 try:
     from StringIO import StringIO as BufferIO
@@ -67,10 +68,11 @@ class S3Package(Hook):
             )
         )
 
-        # just need return code from make command
-        retcode = os.system("make -C {} &> /dev/null".format(fn_root_dir))
+        p = subprocess.Popen(["make -C {} &> /dev/null".format(fn_root_dir)], bufsize=2048, shell=True, stderr=subprocess.PIPE, close_fds=True)
+        p.wait()
+        stderr = p.stderr.read()
 
-        if retcode != 0:
+        if len(stderr) != 0:
             raise Exception("Failed to make dependencies, debug command manually.")
 
         self.logger.debug(
