@@ -5,6 +5,10 @@ from sceptre.resolvers import Resolver
 from botocore.exceptions import ClientError
 from datetime import datetime
 from shutil import rmtree
+try:
+    from subprocess import DEVNULL
+except ImportError:
+    DEVNULL = open(os.devnull, 'wb')
 
 try:
     from StringIO import StringIO as BufferIO
@@ -61,16 +65,16 @@ class S3Package(Hook):
 
         fn_dist_dir = os.path.join(fn_root_dir, self.TARGET)
 
+        command = 'make -C {}'.format(fn_root_dir)
+
         self.logger.info(
-            "[{}] making dependencies with 'make -C {}' command, output hidden.".format(
-                self.NAME, fn_root_dir
-            )
+            "Making dependencies with '{}' command, output hidden.".format(command)
         )
 
-        # just need return code from make command
-        retcode = os.system("make -C {} &> /dev/null".format(fn_root_dir))
+        p = subprocess.Popen([command], shell = True, stdout = DEVNULL, stderr = DEVNULL)
+        p.wait()
 
-        if retcode != 0:
+        if p.returncode != 0:
             raise Exception("Failed to make dependencies, debug command manually.")
 
         self.logger.debug(
